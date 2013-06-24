@@ -1,0 +1,44 @@
+{
+	"name": "lazy-require",
+	"version": "1.0.0",
+	"description": "Lazy require allows you to require modules lazily, meaning that when you lazy require a missing module, it is automatically installed. If the installation or require fails, the error is returned to the lazy require callback.",
+	"homepage": "https://github.com/bevry/lazy-require",
+	"keywords": [
+		"require", "lazy", "optionalDependencies", "optDependencies", "dependencies", "deps"
+	],
+	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
+	"maintainers": [
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+	],
+	"contributors": [
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+	],
+	"bugs": {
+		"url": "https://github.com/bevry/lazy-require/issues"
+	},
+	"repository" : {
+		"type": "git",
+		"url": "http://github.com/bevry/lazy-require.git"
+	},
+	"engines" : {
+		"node": ">=0.4"
+	},
+	"dependencies": {
+		"extract-opts": "~2.2.0",
+		"safeps": "~2.2.3"
+	},
+	"devDependencies": {
+		"rimraf": "~2.2.0",
+		"coffee-script": "~1.6.2",
+		"joe": "~1.2.0",
+		"joe-reporter-console": "~1.2.1",
+		"chai": "~1.7.0"
+	},
+	"directories": {
+		"lib": "./out/lib"
+	},
+	"scripts": {
+		"test": "node ./out/test/lazy-require-test.js"
+	},
+	"main": "./out/lib/lazy-require.js"
+}
