@@ -48,6 +48,7 @@ var lazyRequire = require('lazy-require')
 
 // Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
 // Do this synchronously, only available in Node 0.12 and above
+// Passing a callback as the 3rd argument will do this asynchronously, available in all node versions
 var ambi = lazyRequire('ambi', {/* options */})
 if ( ambi instanceof Error ) {
 	// Error ....
@@ -67,7 +68,7 @@ lazyRequire.sync('ambi', {/* options */}, function(err, ambi){
 
 // Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
 // Do this asynchronously, available in all node versions
-lazyRequire('ambi', {/* options */}, function(err, ambi){
+lazyRequire.async('ambi', {/* options */}, function(err, ambi){
 	// Error ...
 	if (err)  return console.log('ambi failed to load because of:', err.stack)
 
