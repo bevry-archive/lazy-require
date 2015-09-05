@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "extract-opts": "^3.0.1",
-    "safeps": "^3.0.1"
+    "safeps": "^5.1.0"
   },
   "devDependencies": {
     "assert-helpers": "^1.0.2",
