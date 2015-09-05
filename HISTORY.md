@@ -1,5 +1,9 @@
 # History
 
+## v2.1.0 September 5, 2015
+- Moved from CoffeeScript to ES6+
+- Fixed `canSave` method
+
 ## v2.0.0 March 17, 2015
 - Rewritten
 - Support sync require and installs

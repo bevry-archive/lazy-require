@@ -1,195 +1,257 @@
-# Import
-pathUtil = require('path')
-fsUtil = require('fs')
-safeps = require('safeps')
-extractOptsAndCallback = require('extract-opts')
+/* eslint no-sync:0 */
 
-complete = (error, result, next) ->
-	if next
+// Import
+const pathUtil = require('path')
+const fsUtil = require('fs')
+const safeps = require('safeps')
+const extractOptsAndCallback = require('extract-opts')
+
+// Prepare
+function complete (error, result, next) {
+	if ( next ) {
 		next(error, result)
 		return null
-	else
-		return error or result
+	}
+	else {
+		return error || result
+	}
+}
 
-# =====================================
-# Define Module
+// =====================================
+// Define Module
 
-# Require or install a package synchronously or asynchronously
-# Also export this function as the default
-lazyRequire = module.exports = (name, opts, next) ->
-	# Prepare
-	[opts,next] = extractOptsAndCallback(opts, next)
+// Require or install a package synchronously or asynchronously
+// Also export this function as the default
+export default function lazyRequire (name, opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
 
-	# If we have a callback, then do async
-	if next
-		return lazyRequire.async(name, opts, next)
-	else
-		return lazyRequire.sync(name, opts, next)
+	// If we have a callback, then do async
+	return next ? lazyRequire.async(name, opts, next) : lazyRequire.sync(name, opts)
+}
 
-# Require or install a package synchronously or asynchronously
-lazyRequire.auto = (name, opts, next) ->
-	# Prepare
-	[opts,next] = extractOptsAndCallback(opts, next)
+// Require or install a package synchronously or asynchronously
+lazyRequire.auto = function (name, opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
 
-	# If we have no callback, or if we support sync, then do sync
-	if !next or lazyRequire.canSyncInstall()
+	// If we have no callback, or if we support sync, then do sync
+	if ( !next || lazyRequire.canSyncInstall() ) {
 		return lazyRequire.requireOrInstallSync(name, opts, next)
-	else
+	}
+	else {
 		return lazyRequire.requireOrInstallAsync(name, opts, next)
+	}
+}
 
-# Require or install a package synchronously
-lazyRequire.sync = (name, opts, next) ->
-	# Prepare
-	[opts,next] = extractOptsAndCallback(opts, next)
+// Require or install a package synchronously
+lazyRequire.sync = function (name, opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
+	let result = lazyRequire.require(name, opts)
+	let error = null
 
-	# Synchronous
-	result = lazyRequire.require(name, opts)
-	if result instanceof Error
+	// Synchronous
+	if ( result instanceof Error ) {
 		result = lazyRequire.installSync(name, opts)
-		if result instanceof Error
+		if ( result instanceof Error ) {
 			error = result
 			result = null
+		}
+	}
 
-	# Complete
+	// Complete
 	return complete(error, result, next)
+}
 
-# Require or install a package asynchronously
-lazyRequire.async = (name, opts, next) ->
-	# Prepare
-	[opts,next] = extractOptsAndCallback(opts, next)
+// Require or install a package asynchronously
+lazyRequire.async = function (name, opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
 
-	# Asynchronous
-	lazyRequire.require name, opts, (err, result) ->
-		return next(err, result)  if result
+	// Asynchronous
+	lazyRequire.require(name, opts, function (error, result) {
+		if ( result )  return next(error, result)
 		lazyRequire.installAsync(name, opts, next)
+	})
 
-	# Exit
+	// Exit
 	return null
+}
 
-# Attempt to require a module
-lazyRequire.require = (name, opts, next) ->
-	# Prepare
-	[opts,next] = extractOptsAndCallback(opts, next)
+// Attempt to require a module
+lazyRequire.require = function (name, opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
+	let result = null
+	let error = null
 
-	# Fetch
-	try
+	// Fetch
+	try {
 		result = require(name)
-	catch e1
+	}
+	catch ( e1 ) {
 		error = e1
 
-		if opts.cwd
-			path = pathUtil.join(opts.cwd, 'node_modules', name)
-			try
+		if ( opts.cwd ) {
+			let path = pathUtil.join(opts.cwd, 'node_modules', name)
+			try {
 				result = require(path)
 				error = null
-			catch e2
+			}
+			catch ( e2 ) {
 				error = e2
+			}
+		}
+	}
 
-	# Complete
+	// Complete
 	return complete(error, result, next)
+}
 
-# Can Save
-lazyRequire.canSave = (name, opts, next) ->
-	[opts,next] = extractOptsAndCallback(opts, next)
-	opts.cwd ?= process.cwd()
+// Can Save
+lazyRequire.canSave = function (name, opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
+	let result = null
+	let error = null
+
+	// Options
+	if ( opts.cwd == null ) {
+		opts.cwd = process.cwd()
+	}
 	opts.packagePath = pathUtil.join(opts.cwd, 'package.json')
 
-	# Fetch
-	try
-		result = fsUtil.existsSync(packagePath) is true
-	catch err
+	// Fetch
+	try {
+		result = fsUtil.existsSync(opts.packagePath) === true
+	}
+	catch ( err ) {
 		error = err
+	}
 
-	# Complete
+	// Complete
 	return complete(error, result, next)
+}
 
-# Can install synchronously
-lazyRequire.canSyncInstall = (opts, next) ->
-	# Prepare
-	[opts,next] = extractOptsAndCallback(opts, next)
+// Can install synchronously
+lazyRequire.canSyncInstall = function (opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
+	let result = safeps.hasSpawnSync()
+	let error = null
 
-	# Fetch
-	result = safeps.hasSpawnSync()
-	if result instanceof Error
+	// Fetch
+	if ( result instanceof Error ) {
 		error = result
 		result = null
+	}
 
-	# Complete
+	// Complete
 	return complete(error, result, next)
+}
 
-# Attempt to require a module (will install if missing)
-# Asynchronous with optional callback
-lazyRequire.installAsync = (name, opts, next) ->
-	# Prepare
-	[opts,next] = extractOptsAndCallback(opts, next)
-	opts.save ?= false
-	opts.cwd ?= process.cwd()
+// Attempt to require a module (will install if missing)
+// Asynchronous with optional callback
+lazyRequire.installAsync = function (name, opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
+	let error = null
 
-	# Check that we are not in the browser
-	if process.browser is true
-		error = new Error("lazy-require: installing in the browser is not possible")
+	// Defaults
+	if ( opts.save == null ) {
+		opts.save = false
+	}
+	if ( opts.cwd == null ) {
+		opts.cwd = process.cwd()
+	}
 
-	# Check saving
-	else if opts.save is true and lazyRequire.canSave() is false
-		error = new Error("lazy-require: cannot save the module as `opts.cwd` did not contain a `package.json` file")
+	// Check that we are not in the browser
+	if ( process.browser === true ) {
+		error = new Error('lazy-require: installing in the browser is not possible')
+	}
 
-	# Install
-	else
-		# Arguments
-		args = ['npm', 'install', name]
-		if opts.save is true
+	// Check saving
+	else if ( opts.save === true && lazyRequire.canSave() === false ) {
+		error = new Error('lazy-require: cannot save the module as `opts.cwd` did not contain a `package.json` file')
+	}
+
+	// Install
+	else {
+		// Arguments
+		const args = ['npm', 'install', name]
+		if ( opts.save === true ) {
 			args.push('--save')
-			delete opts.save
+			opts.save = null  // {delete opts.save} is very slow
+		}
 
-		# Install
-		safeps.spawn args, opts, (err) ->
-			# Check
-			return next(err)  if err
+		// Install
+		safeps.spawn(args, opts, function (err) {
+			// Check
+			if ( err )  return next(err)
 
-			# Try to load the module
+			// Try to load the module
 			lazyRequire.require(name, opts, next)
+		})
 
-		# Exit
+		// Exit
 		return null
+	}
 
-	# Complete
+	// Complete
 	return complete(error, null, next)
+}
 
-# Attempt to require a module (will install if missing)
-# Synchronous with optional callback
-lazyRequire.installSync = (name, opts, next) ->
-	# Prepare
-	[opts,next] = extractOptsAndCallback(opts, next)
-	opts.save ?= false
-	opts.cwd ?= process.cwd()
+// Attempt to require a module (will install if missing)
+// Synchronous with optional callback
+lazyRequire.installSync = function (name, opts, next) {
+	// Prepare
+	[opts, next] = extractOptsAndCallback(opts, next)
+	let error = null
 
-	# Check that we are not in the browser
-	if process.browser is true
-		error = new Error("lazy-require: installing in the browser is not possible")
+	// Defaults
+	if ( opts.save == null ) {
+		opts.save = false
+	}
+	if ( opts.cwd == null ) {
+		opts.cwd = process.cwd()
+	}
 
-	# Check that spawnSync exists, check that the project's package.json exists
-	else if lazyRequire.canSyncInstall() is false
-		error = new Error("lazy-require: installing synchronously is not possible")
+	// Check that we are not in the browser
+	if ( process.browser === true ) {
+		error = new Error('lazy-require: installing in the browser is not possible')
+	}
 
-	# Check saving
-	else if opts.save is true and lazyRequire.canSave() is false
-		error = new Error("lazy-require: cannot save the module as `opts.cwd` did not contain a `package.json` file")
+	// Check that spawnSync exists, check that the project's package.json exists
+	else if ( lazyRequire.canSyncInstall() === false ) {
+		error = new Error('lazy-require: installing synchronously is not possible')
+	}
 
-	# Install
-	else
-		# Arguments
-		args = ['npm', 'install', name]
-		if opts.save is true
+	// Check saving
+	else if ( opts.save === true && lazyRequire.canSave() === false ) {
+		error = new Error('lazy-require: cannot save the module as `opts.cwd` did not contain a `package.json` file')
+	}
+
+	// Install
+	else {
+		// Arguments
+		const args = ['npm', 'install', name]
+		if ( opts.save === true ) {
 			args.push('--save')
-			delete opts.save
+			opts.save = null  // {delete opts.save} is very slow
+		}
 
-		# Install
-		spawnResult = safeps.spawnSync(args, opts)
-		if spawnResult instanceof Error
+		// Install
+		const spawnResult = safeps.spawnSync(args, opts)
+		if ( spawnResult instanceof Error ) {
 			error = spawnResult
-		else
-			# Exit
+		}
+		else {
+			// Exit
 			return lazyRequire.require(name, opts, next)
+		}
+	}
 
-	# Complete
+	// Complete
 	return complete(error, null, next)
+}
