@@ -1,5 +1,8 @@
 # History
 
+## v2.1.1 September 5, 2015
+- Added explicit support for node 0.10 (regression since v2.1.0)
+
 ## v2.1.0 September 5, 2015
 - Moved from CoffeeScript to ES6+
 - Fixed `canSave` method

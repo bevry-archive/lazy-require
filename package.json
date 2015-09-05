@@ -1,7 +1,7 @@
 {
   "title": "Lazy Require",
   "name": "lazy-require",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Lazy require allows you to require modules lazily, meaning that when you lazy require a module that is missing, lazy require will automatically install it for you.",
   "homepage": "https://github.com/bevry/lazy-require",
   "license": {
@@ -43,7 +43,7 @@
     "url": "http://github.com/bevry/lazy-require.git"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=0.10"
   },
   "dependencies": {
     "extract-opts": "^3.0.1",
