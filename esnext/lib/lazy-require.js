@@ -1,4 +1,5 @@
 /* eslint no-sync:0 */
+'use strict'
 
 // Import
 const pathUtil = require('path')
@@ -22,7 +23,7 @@ function complete (error, result, next) {
 
 // Require or install a package synchronously or asynchronously
 // Also export this function as the default
-export default function lazyRequire (name, opts, next) {
+function lazyRequire (name, opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 
@@ -31,7 +32,7 @@ export default function lazyRequire (name, opts, next) {
 }
 
 // Require or install a package synchronously or asynchronously
-lazyRequire.auto = function (name, opts, next) {
+lazyRequire.auto = function auto (name, opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 
@@ -45,7 +46,7 @@ lazyRequire.auto = function (name, opts, next) {
 }
 
 // Require or install a package synchronously
-lazyRequire.sync = function (name, opts, next) {
+lazyRequire.sync = function sync (name, opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 	let result = lazyRequire.require(name, opts)
@@ -65,7 +66,7 @@ lazyRequire.sync = function (name, opts, next) {
 }
 
 // Require or install a package asynchronously
-lazyRequire.async = function (name, opts, next) {
+lazyRequire.async = function async (name, opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 
@@ -80,7 +81,7 @@ lazyRequire.async = function (name, opts, next) {
 }
 
 // Attempt to require a module
-lazyRequire.require = function (name, opts, next) {
+lazyRequire.require = function _require (name, opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 	let result = null
@@ -94,7 +95,7 @@ lazyRequire.require = function (name, opts, next) {
 		error = e1
 
 		if ( opts.cwd ) {
-			let path = pathUtil.join(opts.cwd, 'node_modules', name)
+			const path = pathUtil.join(opts.cwd, 'node_modules', name)
 			try {
 				result = require(path)
 				error = null
@@ -110,7 +111,7 @@ lazyRequire.require = function (name, opts, next) {
 }
 
 // Can Save
-lazyRequire.canSave = function (name, opts, next) {
+lazyRequire.canSave = function canSave (name, opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 	let result = null
@@ -135,7 +136,7 @@ lazyRequire.canSave = function (name, opts, next) {
 }
 
 // Can install synchronously
-lazyRequire.canSyncInstall = function (opts, next) {
+lazyRequire.canSyncInstall = function canSyncInstall (opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 	let result = safeps.hasSpawnSync()
@@ -153,7 +154,7 @@ lazyRequire.canSyncInstall = function (opts, next) {
 
 // Attempt to require a module (will install if missing)
 // Asynchronous with optional callback
-lazyRequire.installAsync = function (name, opts, next) {
+lazyRequire.installAsync = function installAsync (name, opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 	let error = null
@@ -204,7 +205,7 @@ lazyRequire.installAsync = function (name, opts, next) {
 
 // Attempt to require a module (will install if missing)
 // Synchronous with optional callback
-lazyRequire.installSync = function (name, opts, next) {
+lazyRequire.installSync = function installSync (name, opts, next) {
 	// Prepare
 	[opts, next] = extractOptsAndCallback(opts, next)
 	let error = null
@@ -255,3 +256,6 @@ lazyRequire.installSync = function (name, opts, next) {
 	// Complete
 	return complete(error, null, next)
 }
+
+// Export
+module.exports = lazyRequire

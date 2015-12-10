@@ -1,3 +1,5 @@
+'use strict'
+
 // Import
 const assert = require('assert')
 const {equal, errorEqual} = require('assert-helpers')
@@ -7,7 +9,7 @@ const pathUtil = require('path')
 const lazyRequire = require('../../')
 
 // Tests
-joe.describe('lazy-require', function (describe, it) {
+joe.describe('lazy-require', function (describe) {
 
 	describe('fetch existing', function (describe, it) {
 		it('should work', function (complete) {
