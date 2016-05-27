@@ -1,12 +1,10 @@
-'use strict'
-
 // Import
 const assert = require('assert')
 const {equal, errorEqual} = require('assert-helpers')
 const joe = require('joe')
 const rimraf = require('rimraf')
 const pathUtil = require('path')
-const lazyRequire = require('../../')
+const lazyRequire = require('../')
 
 // Tests
 joe.describe('lazy-require', function (describe) {
