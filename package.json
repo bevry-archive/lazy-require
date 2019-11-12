@@ -112,7 +112,7 @@
     "editions": "^2.2.0",
     "errlop": "^1.1.2",
     "extract-opts": "^3.3.1",
-    "safeps": "7.0.1"
+    "safeps": "8.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
