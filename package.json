@@ -1,7 +1,7 @@
 {
   "title": "Lazy Require",
   "name": "lazy-require",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "Lazy require allows you to require modules lazily, meaning that when you lazy require a module that is missing, lazy require will automatically install it for you.",
   "homepage": "https://github.com/bevry/lazy-require",
   "license": "MIT",
@@ -62,7 +62,7 @@
     "url": "https://github.com/bevry/lazy-require.git"
   },
   "engines": {
-    "node": ">=0.10"
+    "node": ">=8"
   },
   "editions": [
     {
@@ -75,7 +75,7 @@
         "require"
       ],
       "engines": {
-        "node": "6 || 8 || 10 || 12 || 13",
+        "node": "8 || 10 || 12",
         "browsers": false
       }
     },
@@ -91,35 +91,21 @@
         "node": false,
         "browsers": "defaults"
       }
-    },
-    {
-      "description": "esnext compiled for node.js 0.10 with require for modules",
-      "directory": "edition-node-0.10",
-      "entry": "index.js",
-      "tags": [
-        "javascript",
-        "require"
-      ],
-      "engines": {
-        "node": "0.10 || 0.12 || 4 || 6 || 8 || 10 || 12 || 13",
-        "browsers": false
-      }
     }
   ],
-  "main": "index.js",
+  "main": "source/index.js",
   "browser": "edition-browsers/index.js",
   "dependencies": {
-    "editions": "^2.2.0",
     "errlop": "^1.1.2",
     "extract-opts": "^3.3.1",
-    "safeps": "7.0.1"
+    "safeps": "8.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.7.1",
-    "assert-helpers": "4.10.0",
+    "assert-helpers": "^5.2.1",
     "eslint": "^6.6.0",
     "eslint-config-bevry": "^1.2.1",
     "eslint-config-prettier": "^6.5.0",
@@ -128,14 +114,13 @@
     "kava": "^3.1.0",
     "prettier": "^1.19.1",
     "projectz": "^1.9.0",
-    "rimraf": "2.7.1",
+    "rimraf": "3.0.0",
     "valid-directory": "^1.0.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
-    "our:compile": "npm run our:compile:edition-browsers && npm run our:compile:edition-node-0.10",
+    "our:compile": "npm run our:compile:edition-browsers",
     "our:compile:edition-browsers": "env BABEL_ENV=edition-browsers babel --out-dir ./edition-browsers ./source",
-    "our:compile:edition-node-0.10": "env BABEL_ENV=edition-node-0.10 babel --out-dir ./edition-node-0.10 ./source",
     "our:deploy": "echo no need for this project",
     "our:meta": "npm run our:meta:projectz",
     "our:meta:projectz": "projectz compile",
@@ -152,7 +137,7 @@
     "our:verify:directory": "npx valid-directory",
     "our:verify:eslint": "eslint --fix --ignore-pattern '**/*.d.ts' --ignore-pattern '**/vendor/' --ignore-pattern '**/node_modules/' --ext .mjs,.js,.jsx,.ts,.tsx ./source",
     "our:verify:prettier": "prettier --write ./source/**",
-    "test": "node ./test.js"
+    "test": "node ./source/test.js"
   },
   "eslintConfig": {
     "extends": [
@@ -172,23 +157,6 @@
             "@babel/preset-env",
             {
               "targets": "defaults",
-              "modules": "commonjs"
-            }
-          ]
-        ],
-        "plugins": [
-          "@babel/proposal-object-rest-spread"
-        ]
-      },
-      "edition-node-0.10": {
-        "sourceType": "script",
-        "presets": [
-          [
-            "@babel/preset-env",
-            {
-              "targets": {
-                "node": "0.10"
-              },
               "modules": "commonjs"
             }
           ]

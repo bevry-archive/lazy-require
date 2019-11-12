@@ -54,10 +54,9 @@ Lazy require allows you to require modules lazily, meaning that when you lazy re
 
 <p>This package is published with the following editions:</p>
 
-<ul><li><code>lazy-require</code> aliases <code>lazy-require/index.js</code> which uses <a href="https://editions.bevry.me" title="Editions are the best way to produce and consume packages you care about.">Editions</a> to automatically select the correct edition for the consumers environment</li>
+<ul><li><code>lazy-require</code> aliases <code>lazy-require/source/index.js</code></li>
 <li><code>lazy-require/source/index.js</code> is esnext source code with require for modules</li>
-<li><code>lazy-require/edition-browsers/index.js</code> is esnext compiled for browsers with require for modules</li>
-<li><code>lazy-require/edition-node-0.10/index.js</code> is esnext compiled for node.js 0.10 with require for modules</li></ul>
+<li><code>lazy-require/edition-browsers/index.js</code> is esnext compiled for browsers with require for modules</li></ul>
 
 <!-- /INSTALL -->
 

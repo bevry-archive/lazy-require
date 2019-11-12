@@ -2,10 +2,8 @@
 
 // Import
 const assert = require('assert')
-const { equal, errorEqual } = require('assert-helpers')
+const { errorEqual, nullish, undef } = require('assert-helpers')
 const kava = require('kava')
-const rimraf = require('rimraf')
-const pathUtil = require('path')
 const lazyRequire = require('./')
 const safeps = require('safeps')
 
@@ -26,7 +24,7 @@ function cleanup(test) {
 kava.suite('lazy-require', function(suite, test) {
 	test('fetch existing', function(complete) {
 		lazyRequire('safeps', function(err, m) {
-			errorEqual(err, null)
+			nullish(err)
 			assert.ok(m)
 			complete()
 		})
@@ -36,7 +34,7 @@ kava.suite('lazy-require', function(suite, test) {
 
 	test('install missing asynchronously', function(complete) {
 		lazyRequire('bevry-echo', { stdio: 'inherit' }, function(err, m) {
-			errorEqual(err, null)
+			nullish(err)
 			assert.ok(m)
 			complete()
 		})
@@ -61,7 +59,7 @@ kava.suite('lazy-require', function(suite, test) {
 		test('should not work', function(complete) {
 			lazyRequire('aksdkasdlakdlakda', function(err, m) {
 				errorEqual(err, 'npm ERR!')
-				equal(m, null)
+				undef(m)
 				complete()
 			})
 		})
