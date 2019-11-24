@@ -96,7 +96,7 @@
   "dependencies": {
     "errlop": "^1.2.0",
     "extract-opts": "^4.0.0",
-    "safeps": "8.1.0"
+    "safeps": "9.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
