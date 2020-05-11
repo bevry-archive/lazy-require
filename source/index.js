@@ -72,7 +72,7 @@ lazyRequire.async = function async(name, opts, next) {
 	;[opts, next] = extractOptsAndCallback(opts, next)
 
 	// Asynchronous
-	lazyRequire.require(name, opts, function(error, result) {
+	lazyRequire.require(name, opts, function (error, result) {
 		if (result) return next(error, result)
 		lazyRequire.installAsync(name, opts, next)
 	})
@@ -195,7 +195,7 @@ lazyRequire.installAsync = function installAsync(name, opts, next) {
 		}
 
 		// Install
-		safeps.spawn(args, opts, function(err) {
+		safeps.spawn(args, opts, function (err) {
 			// Check
 			if (err) return next(err)
 

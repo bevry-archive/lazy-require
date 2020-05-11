@@ -33,6 +33,81 @@ Lazy require allows you to require modules lazily, meaning that when you lazy re
 <!-- /DESCRIPTION -->
 
 
+## Usage
+
+```javascript
+// Import
+var lazyRequire = require('lazy-require')
+
+// Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
+// Do this synchronously, only available in Node 0.12 and above
+// Passing a callback as the 3rd argument will do this asynchronously, available in all node versions
+var ambi = lazyRequire('ambi', {
+    /* options */
+})
+if (ambi instanceof Error) {
+    // Error ....
+    console.log('ambi failed to load because of:', ambi.stack)
+} else {
+    // Success ...
+}
+
+// Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
+// Do this synchronously but with a callback, only available in Node 0.12 and above
+lazyRequire.sync(
+    'ambi',
+    {
+        /* options */
+    },
+    function (err, ambi) {
+        // Error ...
+        if (err)
+            return console.log('ambi failed to load because of:', err.stack)
+
+        // Success ...
+    }
+)
+
+// Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
+// Do this asynchronously, available in all node versions
+lazyRequire.async(
+    'ambi',
+    {
+        /* options */
+    },
+    function (err, ambi) {
+        // Error ...
+        if (err)
+            return console.log('ambi failed to load because of:', err.stack)
+
+        // Success ...
+    }
+)
+
+// Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
+// Do this synchronously if supported (Node 0.12 and above), otherwise do it asynchronously
+lazyRequire.auto(
+    'ambi',
+    {
+        /* options */
+    },
+    function (err, ambi) {
+        // Error ...
+        if (err)
+            return console.log('ambi failed to load because of:', err.stack)
+
+        // Success ...
+    }
+)
+```
+
+The following options are supported:
+
+-   `cwd` the module path that you would like the requested package to be installed to if it doesn't exist, always recommended
+-   `save` if the requested package doesn't exist, would you like to do a `npm --save` for it to add it to your `cwd`'s `package.json` dependencies?
+
+There's some other methods also available to you, for now, read the source to discover them.
+
 <!-- INSTALL/ -->
 
 <h2>Install</h2>
@@ -40,14 +115,15 @@ Lazy require allows you to require modules lazily, meaning that when you lazy re
 <a href="https://npmjs.com" title="npm is a package manager for javascript"><h3>npm</h3></a>
 <ul>
 <li>Install: <code>npm install --save lazy-require</code></li>
-<li>Require: <code>require('lazy-require')</code></li>
+<li>Import: <code>import * as pkg from ('lazy-require')</code></li>
+<li>Require: <code>const pkg = require('lazy-require')</code></li>
 </ul>
 
 <a href="https://jspm.io" title="Native ES Modules CDN"><h3>jspm</h3></a>
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/lazy-require'
+    import * as pkg from '//dev.jspm.io/lazy-require@4.0.0'
 </script>
 ```
 
@@ -55,64 +131,11 @@ Lazy require allows you to require modules lazily, meaning that when you lazy re
 
 <p>This package is published with the following editions:</p>
 
-<ul><li><code>lazy-require</code> aliases <code>lazy-require/source/index.js</code></li>
-<li><code>lazy-require/source/index.js</code> is esnext source code with require for modules</li>
-<li><code>lazy-require/edition-browsers/index.js</code> is esnext compiled for browsers with require for modules</li></ul>
+<ul><li><code>lazy-require</code> aliases <code>lazy-require/index.js</code> which uses the <a href="https://github.com/bevry/editions" title="You can use the Editions Autoloader to autoload the appropriate edition for your consumers environment">Editions Autoloader</a> to automatically select the correct edition for the consumer's environment</li>
+<li><code>lazy-require/source/index.js</code> is <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> source code for <a href="https://nodejs.org" title="Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine">Node.js</a> with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li>
+<li><code>lazy-require/edition-browsers/index.js</code> is <a href="https://en.wikipedia.org/wiki/ECMAScript#ES.Next" title="ECMAScript Next">ESNext</a> compiled for web browsers with <a href="https://nodejs.org/dist/latest-v5.x/docs/api/modules.html" title="Node/CJS Modules">Require</a> for modules</li></ul>
 
 <!-- /INSTALL -->
-
-
-## Usage
-
-``` javascript
-// Import
-var lazyRequire = require('lazy-require')
-
-// Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
-// Do this synchronously, only available in Node 0.12 and above
-// Passing a callback as the 3rd argument will do this asynchronously, available in all node versions
-var ambi = lazyRequire('ambi', {/* options */})
-if ( ambi instanceof Error ) {
-	// Error ....
-	console.log('ambi failed to load because of:', ambi.stack)
-} else {
-	// Success ...
-}
-
-// Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
-// Do this synchronously but with a callback, only available in Node 0.12 and above
-lazyRequire.sync('ambi', {/* options */}, function(err, ambi){
-	// Error ...
-	if (err)  return console.log('ambi failed to load because of:', err.stack)
-
-	// Success ...
-})
-
-// Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
-// Do this asynchronously, available in all node versions
-lazyRequire.async('ambi', {/* options */}, function(err, ambi){
-	// Error ...
-	if (err)  return console.log('ambi failed to load because of:', err.stack)
-
-	// Success ...
-})
-
-// Attempt to load the module `ambi`, if it doesn't exist, then try to install it and load it again
-// Do this synchronously if supported (Node 0.12 and above), otherwise do it asynchronously
-lazyRequire.auto('ambi', {/* options */}, function(err, ambi){
-	// Error ...
-	if (err)  return console.log('ambi failed to load because of:', err.stack)
-
-	// Success ...
-})
-```
-
-The following options are supported:
-
-- `cwd` the module path that you would like the requested package to be installed to if it doesn't exist, always recommended
-- `save` if the requested package doesn't exist, would you like to do a `npm --save` for it to add it to your `cwd`'s `package.json` dependencies?
-
-There's some other methods also available to you, for now, read the source to discover them.
 
 
 <!-- HISTORY/ -->
@@ -141,7 +164,7 @@ There's some other methods also available to you, for now, read the source to di
 
 These amazing people are maintaining this project:
 
-<ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/lazy-require/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/lazy-require">view contributions</a></li></ul>
+<ul><li><a href="https://github.com/balupton">Benjamin Lupton</a> — <a href="https://github.com/bevry/lazy-require/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/lazy-require">view contributions</a></li></ul>
 
 <h3>Sponsors</h3>
 
@@ -161,9 +184,8 @@ No sponsors yet! Will you be the first?
 
 These amazing people have contributed code to this project:
 
-<ul><li><a href="http://balupton.com">Benjamin Lupton</a> — <a href="https://github.com/bevry/lazy-require/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/lazy-require">view contributions</a></li>
-<li><a href="http://robloach.net">Rob Loach</a> — <a href="https://github.com/bevry/lazy-require/commits?author=RobLoach" title="View the GitHub contributions of Rob Loach on repository bevry/lazy-require">view contributions</a></li>
-<li><a href="http://github.com/apps/dependabot-preview">dependabot-preview[bot]</a> — <a href="https://github.com/bevry/lazy-require/commits?author=dependabot-preview[bot]" title="View the GitHub contributions of dependabot-preview[bot] on repository bevry/lazy-require">view contributions</a></li></ul>
+<ul><li><a href="https://github.com/balupton">Benjamin Lupton</a> — <a href="https://github.com/bevry/lazy-require/commits?author=balupton" title="View the GitHub contributions of Benjamin Lupton on repository bevry/lazy-require">view contributions</a></li>
+<li><a href="https://github.com/RobLoach">Rob Loach</a> — <a href="https://github.com/bevry/lazy-require/commits?author=RobLoach" title="View the GitHub contributions of Rob Loach on repository bevry/lazy-require">view contributions</a></li></ul>
 
 <a href="https://github.com/bevry/lazy-require/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 

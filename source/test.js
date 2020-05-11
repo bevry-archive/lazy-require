@@ -8,12 +8,12 @@ const lazyRequire = require('./')
 const safeps = require('safeps')
 
 function cleanup(test) {
-	test('cleanup', function(complete) {
+	test('cleanup', function (complete) {
 		safeps.spawn(
 			['npm', 'uninstall', 'bevry-echo', '--save'],
 			{
 				stdio: 'inherit',
-				cwd: process.cwd()
+				cwd: process.cwd(),
 			},
 			complete
 		)
@@ -21,9 +21,9 @@ function cleanup(test) {
 }
 
 // Tests
-kava.suite('lazy-require', function(suite, test) {
-	test('fetch existing', function(complete) {
-		lazyRequire('safeps', function(err, m) {
+kava.suite('lazy-require', function (suite, test) {
+	test('fetch existing', function (complete) {
+		lazyRequire('safeps', function (err, m) {
 			nullish(err)
 			assert.ok(m)
 			complete()
@@ -32,8 +32,8 @@ kava.suite('lazy-require', function(suite, test) {
 
 	cleanup(test)
 
-	test('install missing asynchronously', function(complete) {
-		lazyRequire('bevry-echo', { stdio: 'inherit' }, function(err, m) {
+	test('install missing asynchronously', function (complete) {
+		lazyRequire('bevry-echo', { stdio: 'inherit' }, function (err, m) {
 			nullish(err)
 			assert.ok(m)
 			complete()
@@ -42,7 +42,7 @@ kava.suite('lazy-require', function(suite, test) {
 
 	cleanup(test)
 
-	test('install missing synchronously', function() {
+	test('install missing synchronously', function () {
 		// Skip this test if installing synchronously isn't possible
 		if (lazyRequire.canSyncInstall() === false) {
 			return
@@ -55,9 +55,9 @@ kava.suite('lazy-require', function(suite, test) {
 
 	cleanup(test)
 
-	suite('install unknown', function(suite, test) {
-		test('should not work', function(complete) {
-			lazyRequire('aksdkasdlakdlakda', function(err, m) {
+	suite('install unknown', function (suite, test) {
+		test('should not work', function (complete) {
+			lazyRequire('aksdkasdlakdlakda', function (err, m) {
 				errorEqual(err, 'npm ERR!')
 				undef(m)
 				complete()
