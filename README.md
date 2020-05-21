@@ -123,7 +123,7 @@ There's some other methods also available to you, for now, read the source to di
 
 ``` html
 <script type="module">
-    import * as pkg from '//dev.jspm.io/lazy-require@4.2.0'
+    import * as pkg from '//dev.jspm.io/lazy-require@4.3.0'
 </script>
 ```
 
