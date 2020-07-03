@@ -4,7 +4,7 @@
 const assert = require('assert')
 const { errorEqual, nullish, undef } = require('assert-helpers')
 const kava = require('kava')
-const lazyRequire = require('./')
+const lazyRequire = require('./index.js')
 const safeps = require('safeps')
 
 function cleanup(test) {
