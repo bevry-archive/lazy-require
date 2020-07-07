@@ -246,11 +246,8 @@ lazyRequire.installSync = function installSync(name, opts, next) {
 	// Install
 	else {
 		// Arguments
-		const args = ['npm', 'install', name]
-		if (opts.save === true) {
-			args.push('--save')
-			opts.save = null // {delete opts.save} is very slow
-		}
+		const args = ['npm', 'install', name, opts.save === true ? '--save' : '--no-save']
+		opts.save = null // {delete opts.save} is very slow
 
 		// Install
 		const spawnResult = safeps.spawnSync(args, opts)
