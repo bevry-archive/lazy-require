@@ -113,7 +113,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
     "@bevry/update-contributors": "^1.10.0",
-    "assert-helpers": "^6.10.0",
+    "assert-helpers": "^8.1.0",
     "eslint": "^7.3.0",
     "eslint-config-bevry": "^3.10.0",
     "eslint-config-prettier": "^6.11.0",
